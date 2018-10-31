@@ -41,9 +41,9 @@ if __name__ == '__main__':
     runtime = 3000.0 * ms 
     # Inputs: stimululus, AMPA, NMDA, GABA
     inputs      = np.linspace(0,1.2,1.2/0.1+1) 
-    AMPA_mods   = np.linspace(0.2,5,3.75/0.2+1)
-    NMDA_mods   = np.linspace(0.2,5,3.75/0.2+1)
-    GABA_mods   = np.linspace(0.2,5,3.75/0.2+1)
+    AMPA_mods   = np.linspace(0.2,5,3.75/0.1+1)
+    NMDA_mods   = np.linspace(0.2,5,3.75/0.1+1)
+    GABA_mods   = np.linspace(0.2,5,3.75/0.1+1)
     # preallocate
     resp = np.zeros([len(AMPA_mods), len(NMDA_mods), len(GABA_mods), len(inputs)])
     mean_corr = np.zeros([len(AMPA_mods), len(NMDA_mods), len(GABA_mods), len(inputs)])
