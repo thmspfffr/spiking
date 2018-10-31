@@ -135,7 +135,7 @@ if __name__ == '__main__':
                     resp = sum(spt_E[0]>0.25)/(2.75*320)
                     print("Saving output...")
                     hf = h5py.File(os.path.expanduser(root_dir + 'proc/pmod_spiketimes_iinp%d_ampa%d_nmda%d_gaba%d_v%d.h5') % (iinp, iampa, inmda, igaba, v), 'w')
-                    hf.create_dataset('spt_E', data=spt_E)
+                    #hf.create_dataset('spt_E', data=spt_E)
                     hf.create_dataset('spt_E_r', data=mean_corr)
                     hf.create_dataset('spt_E_fr', data=resp)
                     hf.close()
