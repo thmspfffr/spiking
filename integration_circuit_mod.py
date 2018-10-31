@@ -19,7 +19,7 @@ def make_integration_circuit(inp,GABA_mod,AMPA_mod,NMDA_mod):
     # Model parameters for the integration circuit
     # ----------------------------------------------------------------------------------------------- 
     # Populations
-    N = 800                                     # Total number of neurons
+    N = 400                                     # Total number of neurons
     f_inh = 0.20                                  # Fraction of inhibitory neurons
     NE = int(N * (1.0 - f_inh))                  # Number of excitatory neurons (1600)
     NI = int(N * f_inh)                          # Number of inhibitory neurons (400)

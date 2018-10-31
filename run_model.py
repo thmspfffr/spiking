@@ -38,12 +38,12 @@ if __name__ == '__main__':
     # Simulation parameters 
     #------------------------------------------------------------------------------ 
     # Timing 
-    runtime = 10000.0 * ms 
+    runtime = 3000.0 * ms 
     # Inputs: stimululus, AMPA, NMDA, GABA
     inputs      = np.linspace(0,1.2,1.2/0.1+1) 
-    AMPA_mods   = np.linspace(0.25,5,3.75/0.1+1)
-    NMDA_mods   = np.linspace(0.25,5,3.75/0.1+1)
-    GABA_mods   = np.linspace(0.25,5,3.75/0.1+1)
+    AMPA_mods   = np.linspace(0.2,5,3.75/0.2+1)
+    NMDA_mods   = np.linspace(0.2,5,3.75/0.2+1)
+    GABA_mods   = np.linspace(0.2,5,3.75/0.2+1)
     # preallocate
     resp = np.zeros([len(AMPA_mods), len(NMDA_mods), len(GABA_mods), len(inputs)])
     mean_corr = np.zeros([len(AMPA_mods), len(NMDA_mods), len(GABA_mods), len(inputs)])
@@ -122,8 +122,8 @@ if __name__ == '__main__':
                     print("Computing spike count correlations...")
                     spikes = dict()
                     first_spike = 1 # start analysis at 1s
-                    for ineuron in range(0,640):
-                        spikes[ineuron] = SpikeTrain(spt_E[0][(spt_E[1]==ineuron) & (spt_E[0]>first_spike)]*pq.s, t_start = 1.0, t_stop = 10.0)
+                    for ineuron in range(0,320):
+                        spikes[ineuron] = SpikeTrain(spt_E[0][(spt_E[1]==ineuron) & (spt_E[0]>first_spike)]*pq.s, t_start = 0.25, t_stop = 3.0)
                     st = []
                     subsamp = 1
                     matidx = np.triu_indices(len(range(0,len(spikes),subsamp)),1)
@@ -132,11 +132,10 @@ if __name__ == '__main__':
                     sts=BinnedSpikeTrain(st, binsize=10*pq.ms)
                     corr=elephant.spike_train_correlation.corrcoef(sts)
                     mean_corr = corr[matidx].mean()
-                    resp = float(len(spt_E[0]))/(640.0*10)
+                    resp = sum(spt_E[0]>0.25)/(2.75*320)
                     print("Saving output...")
                     hf = h5py.File(os.path.expanduser(root_dir + 'proc/pmod_spiketimes_iinp%d_ampa%d_nmda%d_gaba%d_v%d.h5') % (iinp, iampa, inmda, igaba, v), 'w')
                     hf.create_dataset('spt_E', data=spt_E)
-                    hf.create_dataset('spt_I', data=spt_I)
                     hf.create_dataset('spt_E_r', data=mean_corr)
                     hf.create_dataset('spt_E_fr', data=resp)
                     hf.close()
