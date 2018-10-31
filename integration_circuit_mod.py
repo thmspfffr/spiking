@@ -1,21 +1,8 @@
-'''
-
-Integration circuit from:
-
-Wang, X.-J. Probabilistic decision making by slow reverberation in cortical circuits. Neuron, 2002, 36, 955-968.
-
-@author: Klaus Wimmer and Albert Compte
-
-wimmer.klaus@googlemail.com
-acompte@clinic.ub.es
-
-'''
-
 from brian import *
 import numpy
 
 
-def make_integration_circuit(inp,gIE_GABA_mod,AMPA_mod,NMDA_mod):
+def make_integration_circuit(inp,GABA_mod,AMPA_mod,NMDA_mod):
     
     '''
     Creates the spiking network described in Wang 2002.
@@ -31,24 +18,23 @@ def make_integration_circuit(inp,gIE_GABA_mod,AMPA_mod,NMDA_mod):
     # -----------------------------------------------------------------------------------------------
     # Model parameters for the integration circuit
     # ----------------------------------------------------------------------------------------------- 
-
     # Populations
-    N = 2000                                     # Total number of neurons
-    f_inh = 0.2                                  # Fraction of inhibitory neurons
+    N = 800                                     # Total number of neurons
+    f_inh = 0.20                                  # Fraction of inhibitory neurons
     NE = int(N * (1.0 - f_inh))                  # Number of excitatory neurons (1600)
     NI = int(N * f_inh)                          # Number of inhibitory neurons (400)
-        
+    
     # Connectivity - local recurrent connections
     gEE_AMPA = 0.05 * AMPA_mod * nS		         # Weight of AMPA synapses between excitatory neurons
     gEE_NMDA = 0.165 * NMDA_mod * nS             # Weight of NMDA synapses between excitatory neurons
-    gEI_AMPA = 0.04 * AMPA_mod * nS              # Weight of excitatory to inhibitory synapses (AMPA)
-    gEI_NMDA = 0.13 * NMDA_mod * nS              # Weight of excitatory to inhibitory synapses (NMDA)
-    gIE_GABA = 1.99 * gIE_GABA_mod * nS
-    gII_GABA = 1.0 * nS                          # Weight of inhibitory to inhibitory synapses
+    gEI_AMPA = 0.04 * nS                         # Weight of excitatory to inhibitory synapses (AMPA)
+    gEI_NMDA = 0.13 * nS                         # Weight of excitatory to inhibitory synapses (NMDA)
+    gIE_GABA = 1.99 * GABA_mod * nS              # Weight of inhibitory to excitatory synapses (GABA)
+    gII_GABA = 1.0 * nS                          # Weight of inhibitory to inhibitory synapses (GABA)
     d = 0.5 * ms                                 # Transmission delay of recurrent excitatory and inhibitory connections
                                                 
     # Connectivity - external connections
-    gextE = 2.1 * nS                             # Weight of external input to excitatory neurons
+    gextE = 2.5 * nS                             # Weight of external input to excitatory neurons: Increased from previous value
     gextI = 1.62 * nS                            # Weight of external input to inhibitory neurons
 
     # Neuron model
@@ -62,7 +48,6 @@ def make_integration_circuit(inp,gIE_GABA_mod,AMPA_mod,NMDA_mod):
     tau_refE = 2.0 * ms                          # Absolute refractory period of excitatory neurons
     tau_refI = 1.0 * ms                          # Absolute refractory period of inhibitory neurons
 
-
     # Synapse model
     VrevE = 0 * mV                               # Reversal potential of excitatory synapses
     VrevI = -70 * mV                             # Reversal potential of inhibitory synapses
@@ -73,13 +58,14 @@ def make_integration_circuit(inp,gIE_GABA_mod,AMPA_mod,NMDA_mod):
     alpha_NMDA = 0.5 * kHz                       # Saturation constant of NMDA-type conductances
 
     # Inputs
-    nu_ext_exc = 2600 * Hz                       # Firing rate of external Poisson input to excitatory neurons
-    nu_ext_inh = 2600 * Hz				         # Firing rate of external Poisson input to inhibitory neurons
+    nu_ext_exc = 2000 * Hz                       # Firing rate of external Poisson input to excitatory neurons
+    nu_ext_inh = 2000 * Hz				         # Firing rate of external Poisson input to inhibitory neurons
     stim_ext = inp * Hz
+
     # -----------------------------------------------------------------------------------------------
     # Set up the model
     # ----------------------------------------------------------------------------------------------- 
-
+    
     # Neuron equations
     eqsE = '''
     dV/dt = (-gea*(V-VrevE) - gen*(V-VrevE)/(1.0+exp(-V/mV*0.062)/3.57) - gi*(V-VrevI) - (V-Vl)) / (tau): volt
