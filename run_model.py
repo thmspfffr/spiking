@@ -41,18 +41,18 @@ if __name__ == '__main__':
     runtime = 3000.0 * ms 
     # Inputs: stimululus, AMPA, NMDA, GABA
     inputs      = np.linspace(0,1.2,1.2/0.1+1) 
-    AMPA_mods   = np.linspace(0.2,5,3.75/0.1+1)
-    NMDA_mods   = np.linspace(0.2,5,3.75/0.1+1)
-    GABA_mods   = np.linspace(0.2,5,3.75/0.1+1)
+    AMPA_mods   = np.linspace(0.2,5,4.8/0.2+1)
+    NMDA_mods   = np.linspace(1,1,0/0.1+1)
+    GABA_mods   = np.linspace(0.2,5,4.8/0.2+1)
     # preallocate
     resp = np.zeros([len(AMPA_mods), len(NMDA_mods), len(GABA_mods), len(inputs)])
     mean_corr = np.zeros([len(AMPA_mods), len(NMDA_mods), len(GABA_mods), len(inputs)])
 
     # Loop through exp parameters
-    for igaba in range(0,len(GABA_mods)): 
+    for igaba in range(0,GABA_mods.size): 
         for iinp in range(0,inputs.size):
-            for iampa in range(0,len(AMPA_mods)):
-                for inmda in range(0,len(NMDA_mods)):
+            for iampa in range(0,AMPA_mods.size):
+                for inmda in range(0,NMDA_mods.size):
 
                     fn = os.path.expanduser(root_dir + 'proc/pmod_spiketimes_iampa%d_inmda%d_gaba%d_inp%d_v%d_processing.txt') % (iampa, inmda, igaba, iinp,v)
                     if os.path.isfile(fn)==False:
