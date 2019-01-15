@@ -1,12 +1,23 @@
 #!/bin/sh
 
-echo -n "How many jobs do you want to submit? "
-read NJOBS
+# embedded options to qsub - start with #PBS
+# walltime: defines maximum lifetime of a job
+# nodes/ppn: how many nodes? how many cores?
 
-for i in $( seq 1 $NJOBS); do
-    let var1=10*$i;
-    echo 'Start Job ' $i 'wait for: ' $var1 's'
-    python2.7 run_model.py &
-    sleep $var1
-done
+#PBS -q batch
+#PBS -l walltime=700:00:00
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=10gb
+
+
+# -- run in the current working (submission) directory --
+cd $PBS_O_WORKDIR
+
+chmod g=wx $PBS_JOBNAME
+
+# FILE TO EXECUTE
+
+sleep "$var"
+
+python2.7 run_model.py  1> ~/jobs/$PBS_JOBID.out 2> ~/jobs/$PBS_JOBID.err
 
