@@ -17,7 +17,9 @@ chmod g=wx $PBS_JOBNAME
 
 # FILE TO EXECUTE
 
+source activate pk27
+
 sleep "$var"
 
-python2.7 run_model.py  1> ~/jobs/$PBS_JOBID.out 2> ~/jobs/$PBS_JOBID.err
+python2.7 run_circuitmodel.py  1> ~/jobs/$PBS_JOBID.out 2> ~/jobs/$PBS_JOBID.err
 

@@ -6,19 +6,22 @@ AMPA_mods   = linspace(0.2,5,24);
 NMDA_mods   = 1;
 GABA_mods   = linspace(0.2,5,24) 
 
-v = 6;
-for iinp = 0 : 10
-  for iampa = 0 : 23
-    for igaba = 0 : 23
-      
-      fr(iinp+1,iampa+1,igaba+1) = h5read(sprintf('~/spiking/proc/pmod_spiketimes_iinp%d_ampa%d_nmda0_gaba%d_v%d.h5',iinp,iampa,igaba,v),'/spt_E_fr');
-       r(iinp+1,iampa+1,igaba+1) = h5read(sprintf('~/spiking/proc/pmod_spiketimes_iinp%d_ampa%d_nmda0_gaba%d_v%d.h5',iinp,iampa,igaba,v),'/spt_E_r');
+v = 1;
+for itr = 1
+  for iinp = 0 : 12
+    
+    iinp
+    for iampa = 0 : 23
+      for igaba = 0 : 23
 
+        fr(iinp+1,iampa+1,igaba+1,itr+1) = h5read(sprintf('~/spiking/proc/spiking_circuitmodel_iinp%d_ampa%d_nmda0_gaba%d_tr%d_v%d.h5',iinp,iampa,igaba,itr,v),'/spt_E_fr');
+         r(iinp+1,iampa+1,igaba+1,itr+1) = h5read(sprintf('~/spiking/proc/spiking_circuitmodel_iinp%d_ampa%d_nmda0_gaba%d_tr%d_v%d.h5',iinp,iampa,igaba,itr,v),'/spt_E_r');
+
+      end
     end
   end
+
 end
-
-
 
 %%
 addpath ~/Documents/MATLAB/Colormaps/'Colormaps (5)'/Colormaps/
@@ -29,7 +32,7 @@ ampa = [5 23];
 figure; set(gcf,'color','w');
 
 subplot(1,2,1);
-imagesc(squeeze(fr(2,:,:)),[0 10]);
+imagesc(squeeze(fr(4,:,:)),[0 3]);
 % axis square
 tp_editplots
 ylabel('Excitation (g_{EE,AMPA})')
@@ -44,7 +47,7 @@ set(gca,'XTick',1:2:length(GABA_mods),'XTickLabels',num2cell(round(GABA_mods(1:2
 set(gca,'YTick',1:2:length(AMPA_mods),'YTickLabels',num2cell(round(AMPA_mods(1:2:end)*10)/10),'ydir','normal')
 
 subplot(1,2,2);
-imagesc(squeeze(r(2,:,:)),[0 0.4]);
+imagesc(squeeze(r(4,:,:)),[0 0.2]);
 colormap(plasma)
 % axis square
 title('Spike correlations')
@@ -58,7 +61,7 @@ axis([12.5 24.5 0.5 24.5])
 set(gca,'XTick',1:2:length(GABA_mods),'XTickLabels',num2cell(round(GABA_mods(1:2:end)*10)/10),'ydir','normal')
 set(gca,'YTick',1:2:length(AMPA_mods),'YTickLabels',num2cell(round(AMPA_mods(1:2:end)*10)/10),'ydir','normal')
 
-print(gcf,'-dpdf',sprintf('~/spiking/plots/spiking_ei_gain_v%d.pdf',v))
+print(gcf,'-dpdf',sprintf('~/spiking/plots/spiking_circuitmodel_ei_gain_v%d.pdf',v))
 
 %% FITTING
 % Fit Naka-Rushton function to simulated data, using linear least squares
